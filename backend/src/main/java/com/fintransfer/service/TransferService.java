@@ -4,6 +4,7 @@ import com.fintransfer.model.Transfer;
 import com.fintransfer.repository.TransferRepository;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,17 +12,15 @@ import java.util.Optional;
 public class TransferService {
 
     private final TransferRepository repository;
+    private final FeeCalculatorService feeCalculator;
 
-    public TransferService(TransferRepository repository) {
+    public TransferService(TransferRepository repository, FeeCalculatorService feeCalculator) {
         this.repository = repository;
+        this.feeCalculator = feeCalculator;
     }
 
     public List<Transfer> findAll() {
         return repository.findAll();
-    }
-
-    public Transfer save(Transfer transfer) {
-        return repository.save(transfer);
     }
 
     public Optional<Transfer> findById(Long id) {
@@ -31,4 +30,34 @@ public class TransferService {
     public void deleteById(Long id) {
         repository.deleteById(id);
     }
+
+    /**
+     * Creates a transfer with validation and fee calculation.
+     *
+     * @param transfer Transfer to create
+     * @return Persisted transfer with fee applied
+     */
+    public Transfer createTransfer(Transfer transfer) {
+        if (transfer.getOriginAccount() == null || transfer.getDestinationAccount() == null) {
+            throw new IllegalArgumentException("Origin and destination accounts must be provided.");
+        }
+        if (transfer.getTransferAmount() == null || transfer.getTransferAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("Transfer amount must be greater than zero.");
+        }
+        if (transfer.getScheduleDate() == null || transfer.getTransferDate() == null) {
+            throw new IllegalArgumentException("Scheduled date and transfer date must be provided.");
+        }
+
+        // Calculate fee
+        transfer.setFee(feeCalculator.calculateFee(
+                transfer.getTransferAmount(),
+                transfer.getScheduleDate(),
+                transfer.getTransferDate()
+        ));
+
+        // Persist transfer
+        return repository.save(transfer);
+    }
+
+    // Removed unused save method. Use createTransfer for creation logic with validation and fee calculation.
 }
