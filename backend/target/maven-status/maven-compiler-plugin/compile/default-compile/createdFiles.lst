@@ -1,6 +1,0 @@
-com/fintransfer/service/TransferService.class
-com/fintransfer/FinTransferApplication.class
-com/fintransfer/repository/TransferRepository.class
-com/fintransfer/model/Transfer$TransferBuilder.class
-com/fintransfer/HealthController.class
-com/fintransfer/model/Transfer.class
