@@ -1,0 +1,31 @@
+# Backend (Java/Maven/Spring Boot)
+/backend/target/*
+/backend/.classpath
+/backend/.project
+/backend/.settings/
+/backend/*.iml
+
+# Frontend (Node.js/Vite/Vue.js)
+/frontend/node_modules/
+/frontend/dist/
+/frontend/.vitepress/
+/frontend/.env
+/frontend/.env.*
+/frontend/.DS_Store
+/frontend/*.log
+
+# General
+*.log
+*.tmp
+*.swp
+.DS_Store
+.idea/
+.vscode/
+
+# OS generated files
+Thumbs.db
+
+# Ignore environment files
+.env
+.env.*
+.github
