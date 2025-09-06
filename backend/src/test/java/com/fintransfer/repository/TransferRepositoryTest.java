@@ -19,7 +19,7 @@ class TransferRepositoryTest {
     @Test
     void shouldSaveAndFindTransfer() {
         Transfer transfer = Transfer.builder()
-                .originAccount("11111111111")
+            .originAccount("1111111111") // 10 chars
                 .destinationAccount("2222222222")
                 .transferAmount(new BigDecimal("500.00"))
                 .fee(new BigDecimal("5.00"))

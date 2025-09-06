@@ -13,5 +13,5 @@ public interface TransferRepository extends JpaRepository<Transfer, Long> {
     // Encontrar todos os transfers (já vem do JpaRepository)
     
     // Encontrar por intervalo de datas (opcional)
-    List<Transfer> findByScheduledDateBetween(LocalDate start, LocalDate end);
+    List<Transfer> findByScheduleDateBetween(LocalDate start, LocalDate end);
 }
