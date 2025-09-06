@@ -19,11 +19,13 @@ class TransferRepositoryTest {
     @Test
     void shouldSaveAndFindTransfer() {
         Transfer transfer = Transfer.builder()
-                .sourceAccount("1111111111")
+                .originAccount("1111111111")
                 .destinationAccount("2222222222")
-                .amount(new BigDecimal("500.00"))
+                .transferAmount(new BigDecimal("500.00"))
                 .fee(new BigDecimal("5.00"))
-                .scheduledDate(LocalDate.now().plusDays(2))
+                .transferDate(LocalDate.now().plusDays(2))
+                .scheduleDate(LocalDate.now())
+                .status("PENDING")
                 .build();
 
         Transfer saved = repository.save(transfer);
@@ -31,8 +33,9 @@ class TransferRepositoryTest {
 
         Transfer found = repository.findById(saved.getId()).orElse(null);
         assertThat(found).isNotNull();
-        assertThat(found.getAmount()).isEqualByComparingTo("500.00");
-        assertThat(found.getSourceAccount()).isEqualTo("1111111111");
+        assertThat(found.getTransferAmount()).isEqualByComparingTo("500.00");
+        assertThat(found.getOriginAccount()).isEqualTo("1111111111");
         assertThat(found.getDestinationAccount()).isEqualTo("2222222222");
+        assertThat(found.getStatus()).isEqualTo("PENDING");
     }
 }

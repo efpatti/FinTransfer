@@ -19,17 +19,22 @@ class TransferServiceTest {
     @Test
     void shouldSaveAndRetrieveTransfer() {
         Transfer transfer = Transfer.builder()
-                .sourceAccount("1234567890")
+                .originAccount("1234567890")
                 .destinationAccount("0987654321")
-                .amount(new BigDecimal("1000.00"))
+                .transferAmount(new BigDecimal("1000.00"))
                 .fee(new BigDecimal("0.00"))
-                .scheduledDate(LocalDate.now().plusDays(1))
+                .transferDate(LocalDate.now().plusDays(1))  // quando a transferência vai ocorrer
+                .scheduleDate(LocalDate.now())             // hoje
+                .status("PENDING")
                 .build();
 
         Transfer saved = service.save(transfer);
         assertThat(saved.getId()).isNotNull();
 
         Transfer retrieved = service.findById(saved.getId()).orElseThrow();
-        assertThat(retrieved.getAmount()).isEqualByComparingTo("1000.00");
+        assertThat(retrieved.getTransferAmount()).isEqualByComparingTo("1000.00");
+        assertThat(retrieved.getOriginAccount()).isEqualTo("1234567890");
+        assertThat(retrieved.getDestinationAccount()).isEqualTo("0987654321");
+        assertThat(retrieved.getStatus()).isEqualTo("PENDING");
     }
 }
