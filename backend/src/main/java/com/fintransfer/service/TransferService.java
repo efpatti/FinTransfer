@@ -5,6 +5,7 @@ import com.fintransfer.repository.TransferRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -46,6 +47,9 @@ public class TransferService {
         }
         if (transfer.getScheduleDate() == null || transfer.getTransferDate() == null) {
             throw new IllegalArgumentException("Scheduled date and transfer date must be provided.");
+        }
+        if (transfer.getScheduleDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("Schedule date cannot be in the past.");
         }
 
         // Calculate fee

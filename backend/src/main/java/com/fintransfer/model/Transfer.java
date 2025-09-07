@@ -1,6 +1,8 @@
 package com.fintransfer.model;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 import lombok.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -16,9 +18,13 @@ public class Transfer {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank
+    @Size(max = 10)
     @Column(name = "origin_account", nullable = false, length = 10)
     private String originAccount;
 
+    @NotBlank
+    @Size(max = 10)
     @Column(name = "destination_account", nullable = false, length = 10)
     private String destinationAccount;
 
