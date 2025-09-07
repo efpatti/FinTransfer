@@ -23,6 +23,13 @@ public class TransferService {
     public List<Transfer> findAll() {
         return repository.findAll();
     }
+        public List<Transfer> findAllTransfers() {
+            return repository.findAll();
+        }
+
+        public List<Transfer> findByScheduleDateBetween(LocalDate start, LocalDate end) {
+            return repository.findByScheduleDateBetween(start, end);
+        }
 
     public Optional<Transfer> findById(Long id) {
         return repository.findById(id);

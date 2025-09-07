@@ -25,4 +25,21 @@ public class TransferController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }
+        @GetMapping
+        public ResponseEntity<?> listTransfers(
+                @RequestParam(required = false) String startDate,
+                @RequestParam(required = false) String endDate) {
+            try {
+                if (startDate != null && endDate != null) {
+                    // Parse dates and filter
+                    java.time.LocalDate start = java.time.LocalDate.parse(startDate);
+                    java.time.LocalDate end = java.time.LocalDate.parse(endDate);
+                    return ResponseEntity.ok(transferService.findByScheduleDateBetween(start, end));
+                } else {
+                    return ResponseEntity.ok(transferService.findAllTransfers());
+                }
+            } catch (Exception ex) {
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Invalid date format");
+            }
+        }
 }
