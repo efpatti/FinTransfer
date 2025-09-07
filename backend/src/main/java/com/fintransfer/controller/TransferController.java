@@ -12,12 +12,16 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/transfers")
 public class TransferController {
-    @PostMapping("/{id}/cancel")
+    @DeleteMapping("/{id}")
     public ResponseEntity<?> cancelTransfer(@PathVariable Long id) {
         try {
             Transfer cancelled = transferService.cancelTransfer(id);
             return ResponseEntity.ok(cancelled);
-        } catch (IllegalArgumentException | IllegalStateException ex) {
+        } catch (javax.persistence.EntityNotFoundException ex) {
+            // Not found
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
+        } catch (IllegalStateException ex) {
+            // Cannot cancel
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }

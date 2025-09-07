@@ -16,10 +16,11 @@ public class TransferService {
      * @param id ID da transferência
      * @return Transfer cancelada
      * @throws IllegalStateException se não for possível cancelar
+     * @throws EntityNotFoundException se não encontrar a transferência
      */
     public Transfer cancelTransfer(Long id) {
         Transfer transfer = repository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Transfer not found"));
+                .orElseThrow(() -> new javax.persistence.EntityNotFoundException("Transfer not found"));
         if (transfer.getStatus() == null) {
             throw new IllegalStateException("Transfer status is not set");
         }
