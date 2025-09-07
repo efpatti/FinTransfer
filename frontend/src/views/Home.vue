@@ -3,9 +3,45 @@
   <h1>FinTransfer Frontend</h1>
   <button class="btn btn-primary" @click="checkHealth">Check Backend</button>
   <p v-if="healthMessage" class="mt-3">{{ healthMessage }}</p>
-  <div class="home">
-   <h1>Schedule a Transfer</h1>
-   <TransferForm />
+  <ul class="nav nav-tabs mt-4" role="tablist">
+   <li class="nav-item" role="presentation">
+    <button
+     class="nav-link"
+     :class="{ active: activeTab === 'form' }"
+     @click="activeTab = 'form'"
+     type="button"
+     role="tab"
+    >
+     Schedule Transfer
+    </button>
+   </li>
+   <li class="nav-item" role="presentation">
+    <button
+     class="nav-link"
+     :class="{ active: activeTab === 'list' }"
+     @click="activeTab = 'list'"
+     type="button"
+     role="tab"
+    >
+     List Transfers
+    </button>
+   </li>
+  </ul>
+  <div class="tab-content mt-3">
+   <div
+    v-show="activeTab === 'form'"
+    class="tab-pane fade show active"
+    role="tabpanel"
+   >
+    <TransferForm @transfer-scheduled="onTransferScheduled" />
+   </div>
+   <div
+    v-show="activeTab === 'list'"
+    class="tab-pane fade show active"
+    role="tabpanel"
+   >
+    <TransferList ref="transferList" />
+   </div>
   </div>
  </div>
 </template>
@@ -13,15 +49,18 @@
 <script>
 import { api } from "../services/api";
 import TransferForm from "../components/TransferForm.vue";
+import TransferList from "../components/TransferList.vue";
 
 export default {
  data() {
   return {
    healthMessage: "",
+   activeTab: "form",
   };
  },
  components: {
   TransferForm,
+  TransferList,
  },
  methods: {
   async checkHealth() {
@@ -31,6 +70,11 @@ export default {
    } catch (error) {
     this.healthMessage = "Backend not reachable";
    }
+  },
+  onTransferScheduled() {
+   // Switch to list tab and refresh
+   this.activeTab = "list";
+   this.$refs.transferList.refresh();
   },
  },
 };

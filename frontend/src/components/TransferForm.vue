@@ -104,6 +104,7 @@ export default {
      amount: "",
      transferDate: "",
     };
+    this.$emit("transfer-scheduled");
    } catch (error) {
     this.message = error.response?.data || "Failed to schedule transfer.";
     this.success = false;
