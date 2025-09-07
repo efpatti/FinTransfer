@@ -1,5 +1,6 @@
 package com.fintransfer.repository;
 
+import com.fintransfer.model.TransferStatus;
 import com.fintransfer.model.Transfer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +26,7 @@ class TransferRepositoryTest {
                 .fee(new BigDecimal("5.00"))
                 .transferDate(LocalDate.now().plusDays(2))
                 .scheduleDate(LocalDate.now())
-                .status("PENDING")
+                .status(TransferStatus.PENDING)
                 .build();
 
         Transfer saved = repository.save(transfer);
@@ -36,6 +37,6 @@ class TransferRepositoryTest {
         assertThat(found.getTransferAmount()).isEqualByComparingTo("500.00");
         assertThat(found.getOriginAccount()).isEqualTo("1111111111");
         assertThat(found.getDestinationAccount()).isEqualTo("2222222222");
-        assertThat(found.getStatus()).isEqualTo("PENDING");
+    assertThat(found.getStatus()).isEqualTo(com.fintransfer.model.TransferStatus.PENDING);
     }
 }

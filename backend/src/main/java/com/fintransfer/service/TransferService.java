@@ -11,6 +11,30 @@ import java.util.Optional;
 
 @Service
 public class TransferService {
+    /**
+     * Cancela uma transferência se estiver PENDING.
+     * @param id ID da transferência
+     * @return Transfer cancelada
+     * @throws IllegalStateException se não for possível cancelar
+     */
+    public Transfer cancelTransfer(Long id) {
+        Transfer transfer = repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Transfer not found"));
+        if (transfer.getStatus() == null) {
+            throw new IllegalStateException("Transfer status is not set");
+        }
+        switch (transfer.getStatus()) {
+            case PENDING:
+                transfer.setStatus(com.fintransfer.model.TransferStatus.CANCELLED);
+                return repository.save(transfer);
+            case COMPLETED:
+                throw new IllegalStateException("Cannot cancel a COMPLETED transfer");
+            case CANCELLED:
+                throw new IllegalStateException("Transfer is already CANCELLED");
+            default:
+                throw new IllegalStateException("Unknown transfer status");
+        }
+    }
 
     private final TransferRepository repository;
     private final FeeCalculatorService feeCalculator;

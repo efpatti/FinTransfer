@@ -28,7 +28,7 @@ class TransferValidationTest {
             .fee(new BigDecimal("5.00"))
             .transferDate(LocalDate.now().plusDays(1))
             .scheduleDate(LocalDate.now())
-            .status("PENDING")
+            .status(TransferStatus.PENDING)
             .build();
         Set<ConstraintViolation<Transfer>> violations = validator.validate(transfer);
         assertThat(violations).isNotEmpty();
@@ -43,7 +43,7 @@ class TransferValidationTest {
             .fee(new BigDecimal("5.00"))
             .transferDate(LocalDate.now().plusDays(1))
             .scheduleDate(LocalDate.now())
-            .status("PENDING")
+            .status(TransferStatus.PENDING)
             .build();
         Set<ConstraintViolation<Transfer>> violations = validator.validate(transfer);
         assertThat(violations).isNotEmpty();

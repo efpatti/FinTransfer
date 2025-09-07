@@ -40,6 +40,7 @@ public class Transfer {
     @Column(name = "schedule_date", nullable = false)
     private LocalDate scheduleDate;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
-    private String status;
+    private TransferStatus status;
 }

@@ -1,5 +1,9 @@
-package com.fintransfer.controller;
 
+package com.fintransfer.controller;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.test.context.ActiveProfiles;
+
+import com.fintransfer.model.TransferStatus;
 import com.fintransfer.model.Transfer;
 import com.fintransfer.service.TransferService;
 import org.junit.jupiter.api.Test;
@@ -20,6 +24,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 @WebMvcTest(TransferController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles("test")
 class TransferControllerListTest {
 
     @Autowired
@@ -37,7 +43,7 @@ class TransferControllerListTest {
             .fee(new BigDecimal("5.00"))
             .transferDate(LocalDate.now().plusDays(1))
             .scheduleDate(LocalDate.now())
-            .status("PENDING")
+            .status(TransferStatus.PENDING)
             .build();
         Transfer t2 = Transfer.builder()
             .originAccount("3333333333")
@@ -46,7 +52,7 @@ class TransferControllerListTest {
             .fee(new BigDecimal("10.00"))
             .transferDate(LocalDate.now().plusDays(2))
             .scheduleDate(LocalDate.now().plusDays(1))
-            .status("PENDING")
+            .status(TransferStatus.PENDING)
             .build();
         List<Transfer> transfers = Arrays.asList(t1, t2);
         Mockito.when(transferService.findAllTransfers()).thenReturn(transfers);
@@ -67,7 +73,7 @@ class TransferControllerListTest {
             .fee(new BigDecimal("5.00"))
             .transferDate(LocalDate.now().plusDays(1))
             .scheduleDate(LocalDate.now())
-            .status("PENDING")
+            .status(TransferStatus.PENDING)
             .build();
         List<Transfer> transfers = Arrays.asList(t1);
         Mockito.when(transferService.findByScheduleDateBetween(LocalDate.now(), LocalDate.now().plusDays(1))).thenReturn(transfers);

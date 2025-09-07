@@ -1,5 +1,8 @@
 package com.fintransfer.controller;
-
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import org.springframework.test.context.ActiveProfiles;
+import com.fintransfer.model.TransferStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fintransfer.model.Transfer;
 import com.fintransfer.service.TransferService;
@@ -10,15 +13,14 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TransferController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@ActiveProfiles("test")
 class TransferControllerTest {
 
     @Autowired
@@ -39,7 +41,7 @@ class TransferControllerTest {
                 .fee(new BigDecimal("5.00"))
                 .transferDate(LocalDate.now().plusDays(1))
                 .scheduleDate(LocalDate.now())
-                .status("PENDING")
+                        .status(TransferStatus.PENDING)
                 .build();
 
         Mockito.when(transferService.createTransfer(Mockito.any(Transfer.class)))
@@ -61,7 +63,7 @@ class TransferControllerTest {
                 .fee(new BigDecimal("5.00"))
                 .transferDate(LocalDate.now().plusDays(1))
                 .scheduleDate(LocalDate.now())
-                .status("PENDING")
+                        .status(TransferStatus.PENDING)
                 .build();
 
         mockMvc.perform(post("/transfers")
