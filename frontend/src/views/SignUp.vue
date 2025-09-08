@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import { authService } from "../services/auth";
+import { useAuth } from "../services/useAuth";
 
 export default {
  name: "SignUp",
@@ -130,6 +130,10 @@ export default {
    success: false,
   };
  },
+ setup() {
+  const { register } = useAuth();
+  return { register };
+ },
  methods: {
   async handleSignUp() {
    this.isSubmitting = true;
@@ -141,10 +145,13 @@ export default {
     return;
    }
    try {
-    await authService.signUp(this.username, this.password);
+    await this.register(this.username, this.password);
     this.success = true;
     this.message = "Account created! You are now logged in.";
-    this.$router.push("/");
+    // Aguardar um pouco para mostrar a mensagem de sucesso
+    setTimeout(() => {
+     this.$router.push("/");
+    }, 1500);
    } catch (error) {
     this.success = false;
     this.message = error.response?.data?.message || "Could not create account.";

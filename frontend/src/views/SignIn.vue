@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import { authService } from "../services/auth";
+import { useAuth } from "../services/useAuth";
 
 export default {
  name: "SignIn",
@@ -117,15 +117,22 @@ export default {
    success: false,
   };
  },
+ setup() {
+  const { login } = useAuth();
+  return { login };
+ },
  methods: {
   async handleSignIn() {
    this.isSubmitting = true;
    this.message = "";
    try {
-    await authService.signIn(this.username, this.password);
+    await this.login(this.username, this.password);
     this.success = true;
     this.message = "Login successful!";
-    this.$router.push("/");
+    // Aguardar um pouco para mostrar a mensagem de sucesso
+    setTimeout(() => {
+     this.$router.push("/");
+    }, 1000);
    } catch (error) {
     this.success = false;
     this.message = error.response?.data?.message || "Invalid credentials.";

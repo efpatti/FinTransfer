@@ -2,7 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import Home from "../views/Home.vue";
 import SignIn from "../views/SignIn.vue";
 import SignUp from "../views/SignUp.vue";
-import { authService } from "../services/auth";
+import { useAuth } from "../services/useAuth";
 
 const routes = [
  {
@@ -15,11 +15,13 @@ const routes = [
   path: "/signin",
   name: "SignIn",
   component: SignIn,
+  meta: { requiresGuest: true }, // Redirecionar usuários logados
  },
  {
   path: "/signup",
   name: "SignUp",
   component: SignUp,
+  meta: { requiresGuest: true }, // Redirecionar usuários logados
  },
 ];
 
@@ -29,8 +31,17 @@ const router = createRouter({
 });
 
 router.beforeEach((to, from, next) => {
- if (to.meta.requiresAuth && !authService.isAuthenticated()) {
+ const { isAuthenticated, checkAuthStatus } = useAuth();
+
+ // Verificar status de autenticação atual
+ checkAuthStatus();
+
+ if (to.meta.requiresAuth && !isAuthenticated.value) {
+  // Rota requer autenticação mas usuário não está logado
   next({ name: "SignIn" });
+ } else if (to.meta.requiresGuest && isAuthenticated.value) {
+  // Rota é para usuários não logados mas usuário está logado
+  next({ name: "Home" });
  } else {
   next();
  }
