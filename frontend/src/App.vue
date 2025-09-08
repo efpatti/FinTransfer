@@ -1,7 +1,6 @@
 <template>
- <div>
-  <h1>Vue está rodando!</h1>
-  <router-view></router-view>
+ <div class="min-h-screen bg-gray-900 text-white">
+  <router-view />
  </div>
 </template>
 

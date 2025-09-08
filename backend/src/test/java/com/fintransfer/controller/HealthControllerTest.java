@@ -1,7 +1,6 @@
-
 package com.fintransfer.controller;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.context.annotation.Import;
+import com.fintransfer.config.TestSecurityConfig;
 
 import com.fintransfer.HealthController;
 import org.junit.jupiter.api.Test;
@@ -14,8 +13,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(HealthController.class)
-@AutoConfigureMockMvc(addFilters = false)
-@ActiveProfiles("test")
+@Import(TestSecurityConfig.class)
 class HealthControllerTest {
     @Autowired
     private MockMvc mockMvc;

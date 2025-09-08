@@ -8,6 +8,10 @@ import org.springframework.security.web.SecurityFilterChain;
 @TestConfiguration
 public class TestSecurityConfig {
     @Bean
+    public com.fintransfer.security.JwtUtil jwtUtil() {
+        return new com.fintransfer.security.JwtUtil();
+    }
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
             .authorizeRequests().anyRequest().permitAll();
