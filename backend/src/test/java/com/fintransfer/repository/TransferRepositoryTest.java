@@ -1,6 +1,6 @@
 package com.fintransfer.repository;
-
 import com.fintransfer.model.TransferStatus;
+
 import com.fintransfer.model.Transfer;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +37,6 @@ class TransferRepositoryTest {
         assertThat(found.getTransferAmount()).isEqualByComparingTo("500.00");
         assertThat(found.getOriginAccount()).isEqualTo("1111111111");
         assertThat(found.getDestinationAccount()).isEqualTo("2222222222");
-    assertThat(found.getStatus()).isEqualTo(com.fintransfer.model.TransferStatus.PENDING);
+    assertThat(found.getStatus()).isEqualTo(TransferStatus.PENDING);
     }
 }

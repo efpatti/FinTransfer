@@ -1,5 +1,4 @@
 package com.fintransfer.repository;
-
 import com.fintransfer.model.TransferStatus;
 
 import com.fintransfer.model.Transfer;
@@ -27,7 +26,7 @@ class TransferRepositoryQueryTest {
             .fee(new BigDecimal("5.00"))
             .transferDate(LocalDate.now().plusDays(1))
             .scheduleDate(LocalDate.now())
-                .status(TransferStatus.PENDING)
+            .status(TransferStatus.PENDING)
             .build();
         Transfer t2 = Transfer.builder()
             .originAccount("3333333333")
@@ -36,7 +35,7 @@ class TransferRepositoryQueryTest {
             .fee(new BigDecimal("10.00"))
             .transferDate(LocalDate.now().plusDays(2))
             .scheduleDate(LocalDate.now().plusDays(1))
-                .status(TransferStatus.PENDING)
+            .status(TransferStatus.PENDING)
             .build();
         repository.save(t1);
         repository.save(t2);
