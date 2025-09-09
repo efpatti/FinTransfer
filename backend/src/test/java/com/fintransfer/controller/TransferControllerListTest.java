@@ -55,7 +55,7 @@ class TransferControllerListTest {
         List<Transfer> transfers = Arrays.asList(t1, t2);
         Mockito.when(transferService.findAllTransfers()).thenReturn(transfers);
 
-        mockMvc.perform(get("/transfers")
+        mockMvc.perform(get("/api/transfers")
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].originAccount").value("1111111111"))
@@ -76,7 +76,7 @@ class TransferControllerListTest {
         List<Transfer> transfers = Arrays.asList(t1);
         Mockito.when(transferService.findByScheduleDateBetween(LocalDate.now(), LocalDate.now().plusDays(1))).thenReturn(transfers);
 
-        mockMvc.perform(get("/transfers?startDate=" + LocalDate.now() + "&endDate=" + LocalDate.now().plusDays(1))
+        mockMvc.perform(get("/api/transfers?startDate=" + LocalDate.now() + "&endDate=" + LocalDate.now().plusDays(1))
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].originAccount").value("1111111111"));

@@ -49,7 +49,7 @@ class TransferControllerTest {
         Mockito.when(transferService.createTransfer(Mockito.any(Transfer.class)))
                 .thenReturn(transfer);
 
-        mockMvc.perform(post("/transfers")
+        mockMvc.perform(post("/api/transfers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(transfer)))
                 .andExpect(status().isCreated())
@@ -68,7 +68,7 @@ class TransferControllerTest {
                 .status(TransferStatus.PENDING)
                 .build();
 
-        mockMvc.perform(post("/transfers")
+        mockMvc.perform(post("/api/transfers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(transfer)))
                 .andExpect(status().isBadRequest());
@@ -77,7 +77,7 @@ class TransferControllerTest {
     @Test
     void shouldReturn400ForMalformedJson() throws Exception {
         String malformedJson = "{\"originAccount\": \"1234567890\", \"destinationAccount\": }";
-        mockMvc.perform(post("/transfers")
+        mockMvc.perform(post("/api/transfers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(malformedJson))
                 .andExpect(status().isBadRequest());
@@ -86,7 +86,7 @@ class TransferControllerTest {
     @Test
     void shouldReturn400ForMissingRequiredFields() throws Exception {
         String missingFieldsJson = "{\"originAccount\": \"1234567890\"}";
-        mockMvc.perform(post("/transfers")
+        mockMvc.perform(post("/api/transfers")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(missingFieldsJson))
                 .andExpect(status().isBadRequest());
