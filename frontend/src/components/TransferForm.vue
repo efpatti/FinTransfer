@@ -404,7 +404,7 @@ export default {
      fee: 0,
     };
 
-    await api.post("/transfers", payload);
+    await api.post("/api/transfers", payload);
 
     this.message = "Transferência agendada com sucesso!";
     this.success = true;

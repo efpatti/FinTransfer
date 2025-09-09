@@ -10,18 +10,14 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/transfers")
+@RequestMapping("/api/transfers")
 public class TransferController {
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}/cancel")
     public ResponseEntity<?> cancelTransfer(@PathVariable Long id) {
         try {
             Transfer cancelled = transferService.cancelTransfer(id);
             return ResponseEntity.ok(cancelled);
-        } catch (javax.persistence.EntityNotFoundException ex) {
-            // Not found
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ex.getMessage());
-        } catch (IllegalStateException ex) {
-            // Cannot cancel
+        } catch (IllegalArgumentException | IllegalStateException ex) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
         }
     }

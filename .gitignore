@@ -6,7 +6,9 @@
 /backend/.project
 /backend/.settings/
 /backend/*.iml
-AUTHENTICATION_GUIDE.md
+/backend/data/
+*.mv.db
+*.trace.db
 
 # Frontend (Node.js/Vite/Vue.js)
 /frontend/node_modules/

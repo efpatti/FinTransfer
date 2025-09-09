@@ -25,7 +25,9 @@ public class SecurityConfig {
 			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 			.and()
 			.authorizeRequests()
-				   .antMatchers("/api/auth/**", "/api/log", "/health").permitAll()
+				.antMatchers("/api/auth/**", "/api/log").permitAll() // Endpoints públicos
+				.antMatchers("/health").permitAll() // Health check público (se ainda houver)
+				.antMatchers("/api/**").authenticated() // Todos os outros endpoints /api/* requerem autenticação
 				.anyRequest().authenticated()
 			.and()
 			.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

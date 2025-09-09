@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teste de Integração FinTransfer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+        }
+
+        button {
+            padding: 10px 15px;
+            margin: 5px;
+            cursor: pointer;
+        }
+
+        input {
+            padding: 5px;
+            margin: 5px;
+            width: 200px;
+        }
+
+        pre {
+            background: #f8f9fa;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>🧪 Teste de Integração FinTransfer</h1>
+
+    <div class="test-section">
+        <h3>🔐 Teste de Autenticação</h3>
+        <div>
+            <input type="text" id="username" placeholder="Username" value="admin">
+            <input type="password" id="password" placeholder="Password" value="admin123">
+        </div>
+        <div>
+            <button onclick="testSignUp()">Criar Conta</button>
+            <button onclick="testSignIn()">Fazer Login</button>
+            <button onclick="testLogout()">Logout</button>
+        </div>
+        <div id="authResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>🏥 Teste de Health Check</h3>
+        <button onclick="testHealth()">Verificar Health</button>
+        <div id="healthResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>📋 Teste de Transfers</h3>
+        <button onclick="testTransfers()">Listar Transfers</button>
+        <div id="transfersResult"></div>
+    </div>
+
+    <div class="test-section">
+        <h3>🎯 Estado Atual</h3>
+        <button onclick="checkCurrentState()">Verificar Estado</button>
+        <div id="stateResult"></div>
+    </div>
+
+    <script>
+        let currentToken = null;
+
+        // Configuração base da API
+        const API_BASE = 'http://localhost:8080/api';
+
+        // Função para fazer requests
+        async function makeRequest(endpoint, options = {}) {
+            const url = `${API_BASE}${endpoint}`;
+            const config = {
+                headers: {
+                    'Content-Type': 'application/json',
+                    ...(currentToken ? { 'Authorization': `Bearer ${currentToken}` } : {})
+                },
+                ...options
+            };
+
+            try {
+                const response = await fetch(url, config);
+                const data = await response.text();
+
+                let result;
+                try {
+                    result = JSON.parse(data);
+                } catch {
+                    result = data;
+                }
+
+                return {
+                    success: response.ok,
+                    status: response.status,
+                    data: result
+                };
+            } catch (error) {
+                return {
+                    success: false,
+                    error: error.message
+                };
+            }
+        }
+
+        // Testes de autenticação
+        async function testSignUp() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const result = await makeRequest('/auth/signup', {
+                method: 'POST',
+                body: JSON.stringify({ username, password })
+            });
+
+            displayResult('authResult', 'SignUp', result);
+        }
+
+        async function testSignIn() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            const result = await makeRequest('/auth/signin', {
+                method: 'POST',
+                body: JSON.stringify({ username, password })
+            });
+
+            if (result.success && result.data.token) {
+                currentToken = result.data.token;
+                localStorage.setItem('jwt', currentToken);
+            }
+
+            displayResult('authResult', 'SignIn', result);
+        }
+
+        async function testLogout() {
+            currentToken = null;
+            localStorage.removeItem('jwt');
+            displayResult('authResult', 'Logout', { success: true, message: 'Logout realizado localmente' });
+        }
+
+        // Teste de health
+        async function testHealth() {
+            const result = await makeRequest('/health');
+            displayResult('healthResult', 'Health Check', result);
+        }
+
+        // Teste de transfers
+        async function testTransfers() {
+            const result = await makeRequest('/transfers');
+            displayResult('transfersResult', 'List Transfers', result);
+        }
+
+        // Verificar estado atual
+        async function checkCurrentState() {
+            const storedToken = localStorage.getItem('jwt');
+            if (storedToken) {
+                currentToken = storedToken;
+            }
+
+            const state = {
+                hasToken: !!currentToken,
+                tokenPreview: currentToken ? currentToken.substring(0, 50) + '...' : 'Nenhum',
+                localStorage: localStorage.getItem('jwt') ? 'Token presente' : 'Nenhum token'
+            };
+
+            displayResult('stateResult', 'Estado Atual', { success: true, data: state });
+        }
+
+        // Função para exibir resultados
+        function displayResult(elementId, operation, result) {
+            const element = document.getElementById(elementId);
+            const className = result.success ? 'success' : 'error';
+
+            element.innerHTML = `
+                <div class="${className}">
+                    <h4>${operation}</h4>
+                    <p><strong>Status:</strong> ${result.success ? 'Sucesso' : 'Erro'} ${result.status ? `(${result.status})` : ''}</p>
+                    <pre>${JSON.stringify(result.data || result.error, null, 2)}</pre>
+                </div>
+            `;
+        }
+
+        // Inicializar estado
+        window.onload = function () {
+            checkCurrentState();
+        };
+    </script>
+</body>
+
+</html>
