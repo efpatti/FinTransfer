@@ -339,7 +339,7 @@ export default {
   async fetchTransfers() {
    this.isLoading = true;
    try {
-    const response = await api.get("/api/transfers");
+    const response = await api.get("/transfers");
     this.transfers = response.data || [];
     this.applyFilters();
     this.$emit("transfers-loaded", this.transfers.length);

@@ -298,7 +298,7 @@ export default {
   async checkHealth() {
    this.isCheckingHealth = true;
    try {
-    const response = await api.get("/api/health");
+    const response = await api.get("/health");
     this.healthMessage = "Sistema operacional";
     this.healthStatus = "success";
    } catch (error) {
